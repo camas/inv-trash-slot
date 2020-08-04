@@ -1,0 +1,34 @@
+{
+    "schemaVersion": 1,
+    "id": "invtrashslot",
+    "version": "${version}",
+    "name": "InvTrashSlot",
+    "description": "",
+    "authors": [
+        "Camas"
+    ],
+    "contact": {
+        "homepage": "",
+        "sources": ""
+    },
+    "license": "CC0-1.0",
+    "icon": "assets/invtrashslot/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "io.github.camas.invtrashslot.InvTrashSlotKt::init"
+        ]
+    },
+    "mixins": [
+        "invtrashslot.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.8.7",
+        "fabric": "*",
+        "fabric-language-kotlin": "*",
+        "minecraft": "1.16.x"
+    },
+    "suggests": {
+        "flamingo": "*"
+    }
+}
