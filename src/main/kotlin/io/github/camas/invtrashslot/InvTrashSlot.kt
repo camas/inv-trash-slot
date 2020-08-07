@@ -62,7 +62,7 @@ fun initClient() {
  * Holds static and constant variables
  */
 object InvTrashSlot {
-    const val VERSION = "1.0.0"
+    const val VERSION = "1.0.1"
     const val MOD_ID = "invtrashslot"
     const val SLOT_X = 148
     const val SLOT_Y = 164
