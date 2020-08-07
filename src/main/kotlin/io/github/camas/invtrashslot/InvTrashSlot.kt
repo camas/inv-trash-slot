@@ -22,10 +22,14 @@ fun init() {
         // Read packet data
         val slotId = buffer.readInt()
 
-        // Get item currently in slot and replace with nothing
+        // Get slot to be trashed
         val toTrashSlot = context.player.currentScreenHandler.getSlot(slotId)
-        val toTrash = toTrashSlot.stack
-        toTrashSlot.stack = ItemStack.EMPTY
+        // Return early if player can't take items or slot is trashslot
+        if (!toTrashSlot.canTakeItems(context.player) || toTrashSlot.inventory is TrashSlotInventory) {
+            return@register
+        }
+        val toTrash = toTrashSlot.takeStack(toTrashSlot.stack.count)
+        toTrashSlot.onTakeItem(context.player, ItemStack.EMPTY)
         // Return early if empty
         if (toTrash.isEmpty) {
             return@register

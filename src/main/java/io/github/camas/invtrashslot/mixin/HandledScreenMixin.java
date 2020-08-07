@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
@@ -34,6 +35,10 @@ public abstract class HandledScreenMixin extends Screen {
     @Shadow
     protected abstract boolean isPointWithinBounds(int xPosition, int yPosition, int width, int height, double pointX, double pointY);
 
+    @Shadow
+    @Final
+    protected PlayerInventory playerInventory;
+
     /**
      * Trashes item when delete button pressed
      */
@@ -56,13 +61,19 @@ public abstract class HandledScreenMixin extends Screen {
 
         for (Slot slot : this.handler.slots) {
             if (isPointWithinBounds(slot.x, slot.y, 16, 16, mouseX, mouseY)) {
-                if (slot.getStack().isEmpty() || slot.inventory instanceof TrashSlotInventory) {
+                if (slot.getStack().isEmpty() || slot.inventory instanceof TrashSlotInventory || !slot.canTakeItems(this.playerInventory.player)) {
                     break;
                 }
+                // Send packet telling server to update trash slot
+                // Too lazy to do it client side so won't update on screen until server responds
                 PacketByteBuf packetData = new PacketByteBuf(Unpooled.buffer());
                 packetData.writeInt(slot.id);
                 ClientSidePacketRegistry.INSTANCE.sendToServer(InvTrashSlot.TRASH_SLOT_PACKET_ID, packetData);
-                slot.setStack(ItemStack.EMPTY);
+
+                // Take item from the slot
+                slot.takeStack(slot.getStack().getCount());
+                slot.onTakeItem(this.playerInventory.player, ItemStack.EMPTY);
+
                 break;
             }
 
