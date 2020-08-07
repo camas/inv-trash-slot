@@ -2,6 +2,7 @@ package io.github.camas.invtrashslot.mixin;
 
 import io.github.camas.invtrashslot.InvTrashSlot;
 import io.github.camas.invtrashslot.InvTrashSlotClient;
+import io.github.camas.invtrashslot.TrashSlotInventory;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.gui.screen.Screen;
@@ -55,7 +56,7 @@ public abstract class HandledScreenMixin extends Screen {
 
         for (Slot slot : this.handler.slots) {
             if (isPointWithinBounds(slot.x, slot.y, 16, 16, mouseX, mouseY)) {
-                if (slot.getStack().isEmpty()) {
+                if (slot.getStack().isEmpty() || slot.inventory instanceof TrashSlotInventory) {
                     break;
                 }
                 PacketByteBuf packetData = new PacketByteBuf(Unpooled.buffer());
