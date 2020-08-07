@@ -2,7 +2,9 @@ package io.github.camas.invtrashslot.mixin;
 
 import io.github.camas.invtrashslot.ITrashSlot;
 import io.github.camas.invtrashslot.PlayerTrashSlot;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +22,7 @@ public abstract class PlayerEntityMixin implements ITrashSlot {
     PlayerTrashSlot InvTrashSlot$playerTrashSlot = new PlayerTrashSlot();
 
     /**
-     * Get the player' trash slot
+     * Get the player's trash slot
      */
     @NotNull
     @Override
@@ -38,5 +40,13 @@ public abstract class PlayerEntityMixin implements ITrashSlot {
     @Inject(method = "writeCustomDataToTag(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("TAIL"))
     private void writeNBT(CompoundTag tag, CallbackInfo info) {
         getTrashSlot().writeToTag(tag);
+    }
+
+    /**
+     * Empties the trash slot on death
+     */
+    @Inject(method = "onDeath(Lnet/minecraft/entity/damage/DamageSource;)V", at = @At("TAIL"))
+    private void InvTrashSlot$onDeath(DamageSource source, CallbackInfo callback) {
+        this.InvTrashSlot$playerTrashSlot.getInventory().setStack(0, ItemStack.EMPTY);
     }
 }
