@@ -17,6 +17,9 @@
     "entrypoints": {
         "main": [
             "io.github.camas.invtrashslot.InvTrashSlotKt::init"
+        ],
+        "client": [
+            "io.github.camas.invtrashslot.InvTrashSlotKt::initClient"
         ]
     },
     "mixins": [

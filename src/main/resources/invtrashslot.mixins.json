@@ -1,10 +1,16 @@
 {
-    "required": true,
-    "package": "io.github.camas.invtrashslot.mixin",
-    "compatibilityLevel": "JAVA_8",
-    "mixins": [],
-    "client": [],
-    "injectors": {
-        "defaultRequire": 1
-    }
+  "required": true,
+  "package": "io.github.camas.invtrashslot.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "PlayerEntityMixin",
+    "PlayerScreenHandlerMixin",
+    "ScreenHandlerMixin"
+  ],
+  "client": [
+    "InventoryScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }
