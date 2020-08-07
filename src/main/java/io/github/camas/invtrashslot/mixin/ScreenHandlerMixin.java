@@ -22,6 +22,11 @@ public abstract class ScreenHandlerMixin {
     @Shadow
     public abstract ItemStack transferSlot(PlayerEntity player, int index);
 
+    /**
+     * Overrides slot behaviour for the trash slot
+     * If stacks can be combined: set trash slot to the resulting combination, discarding the rest
+     * If not: set trash slot to stack
+     */
     @Inject(method = "onSlotClick(IILnet/minecraft/screen/slot/SlotActionType;Lnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/item/ItemStack;",
             at = @At("HEAD"),
             cancellable = true)

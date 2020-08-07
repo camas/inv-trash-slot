@@ -18,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin implements ITrashSlot {
     // Adds a trash slot to every player entity on creation
-    // Try to make name unique
     PlayerTrashSlot InvTrashSlot$playerTrashSlot = new PlayerTrashSlot();
 
     /**
@@ -30,15 +29,19 @@ public abstract class PlayerEntityMixin implements ITrashSlot {
         return InvTrashSlot$playerTrashSlot;
     }
 
-    // Reads trash slot data after other player data has been read
+    /**
+     * Reads trash slot data after other player data has been read
+     */
     @Inject(method = "readCustomDataFromTag(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("TAIL"))
-    private void readNBT(CompoundTag tag, CallbackInfo info) {
+    private void InvTrashSlot$readCustomDataFromTag(CompoundTag tag, CallbackInfo info) {
         getTrashSlot().readFromTag(tag);
     }
 
-    // Writes trash slot data after other player data has been written
+    /**
+     * Writes trash slot data after other player data has been written
+     */
     @Inject(method = "writeCustomDataToTag(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("TAIL"))
-    private void writeNBT(CompoundTag tag, CallbackInfo info) {
+    private void InvTrashSlot$writeCustomDataToTag(CompoundTag tag, CallbackInfo info) {
         getTrashSlot().writeToTag(tag);
     }
 

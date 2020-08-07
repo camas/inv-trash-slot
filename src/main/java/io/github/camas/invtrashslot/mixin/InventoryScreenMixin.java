@@ -32,6 +32,9 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
         super(screenHandler, playerInventory, text);
     }
 
+    /**
+     * Adds trash slot to bounds checking
+     */
     @Inject(method = "isClickOutsideBounds(DDIII)Z", at = @At("HEAD"), cancellable = true)
     private void InvTrashSlot$isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button, CallbackInfoReturnable<Boolean> callback) {
         // If within 1 of trash slot return false, ignoring usual bounds checking
@@ -40,12 +43,18 @@ public abstract class InventoryScreenMixin extends AbstractInventoryScreen<Playe
         }
     }
 
+    /**
+     * Draws the trash slot background
+     */
     @Inject(method = "drawBackground(Lnet/minecraft/client/util/math/MatrixStack;FII)V", at = @At("TAIL"))
     private void InvTrashSlot$drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY, CallbackInfo callback) {
         this.client.getTextureManager().bindTexture(InvTrashSlot$BACKGROUND_TEXTURE);
         drawTexture(matrices, this.x + InvTrashSlot.SLOT_X - 5, this.y + InvTrashSlot.SLOT_Y - 2, 0, 0, 26, 23, 26, 23);
     }
 
+    /**
+     * Deletes item when delete button pressed
+     */
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         // From GameRenderer

@@ -20,6 +20,9 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler {
         super(type, syncId);
     }
 
+    /**
+     * Adds the trash slot to the inventory screen
+     */
     @Inject(method = "<init>(Lnet/minecraft/entity/player/PlayerInventory;ZLnet/minecraft/entity/player/PlayerEntity;)V", at = @At("RETURN"))
     private void InvTrashSlot$constructor(PlayerInventory inventory, boolean onServer, PlayerEntity owner, CallbackInfo callbackInfo) {
         // Add a gui slot containing the trash slot inventory

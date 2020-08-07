@@ -19,16 +19,23 @@ fun init() {
     // Register packets
     ServerSidePacketRegistry.INSTANCE.register(InvTrashSlot.TRASH_SLOT_PACKET_ID)
     { context, buffer ->
+        // Read packet data
         val slotId = buffer.readInt()
+
+        // Get item currently in slot and replace with nothing
         val toTrashSlot = context.player.currentScreenHandler.getSlot(slotId)
         val toTrash = toTrashSlot.stack
         toTrashSlot.stack = ItemStack.EMPTY
+        // Return early if empty
         if (toTrash.isEmpty) {
             return@register
         }
+
+        // Get trash slot inventory
         val trashInv = (context.player as ITrashSlot).getTrashSlot().inventory
         val currentStack = trashInv.getStack(0)
-        // Set trash slot to cursor item and set cursor item to empty
+
+        // Trash item
         if (ScreenHandler.canStacksCombine(currentStack, toTrash)) {
             val newCount = currentStack.count + toTrash.count
             currentStack.count = newCount.coerceAtMost(currentStack.maxCount)
@@ -43,9 +50,13 @@ fun init() {
  * Client-only entry point
  */
 fun initClient() {
+    // Register keybinds
     KeyBindingHelper.registerKeyBinding(InvTrashSlotClient.deleteKeybind)
 }
 
+/**
+ * Holds static and constant variables
+ */
 object InvTrashSlot {
     const val VERSION = "1.0.0"
     const val MOD_ID = "invtrashslot"
@@ -54,15 +65,16 @@ object InvTrashSlot {
 
     @JvmField
     val TRASH_SLOT_PACKET_ID = Identifier(MOD_ID, "trash_slot_packet");
-
-
 }
 
+/**
+ * Holds client-only static and constant variables
+ */
 object InvTrashSlotClient {
     @JvmField
     val deleteKeybind = KeyBinding(
-            "key.${InvTrashSlot.MOD_ID}.delete",
-            InputUtil.Type.KEYSYM,
-            GLFW.GLFW_KEY_DELETE,
-            "category.${InvTrashSlot.MOD_ID}.main");
+        "key.${InvTrashSlot.MOD_ID}.delete",
+        InputUtil.Type.KEYSYM,
+        GLFW.GLFW_KEY_DELETE,
+        "category.${InvTrashSlot.MOD_ID}.main");
 }
